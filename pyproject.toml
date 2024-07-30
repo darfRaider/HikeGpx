@@ -1,0 +1,7 @@
+[project]
+name = "HikeGpx"
+version = "0.0.1"
+dependencies = [
+    "beautifulsoup4==4.12.2",
+    'importlib-metadata; python_version=="3.9"',
+]
