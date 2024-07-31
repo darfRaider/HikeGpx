@@ -1,10 +1,8 @@
 from ..Coordinates.WGS84 import WGS84
-
 from dataclasses import dataclass
 import bs4
 import warnings
 from enum import Enum
-
 
 class WaypointType(Enum):
     """
