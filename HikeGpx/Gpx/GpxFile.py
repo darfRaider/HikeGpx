@@ -32,4 +32,8 @@ class GpxFile:
     def add_waypoint(self, waypoint: Waypoint):
         self.gpx_tag.append(waypoint.get_soup(self.root))
         self.waypoints.append(waypoint)
+
+    def save(self, path):
+        with open(path, "w", encoding="utf8") as f:
+            f.write(self.root.prettify())
     

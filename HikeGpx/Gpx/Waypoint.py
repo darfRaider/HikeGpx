@@ -7,11 +7,50 @@ from enum import Enum
 
 
 class WaypointType(Enum):
+    """
+    Waypoints that can be used with SUUNTO watches
+    https://apizone.suunto.com/route-description
+    """
     Waypoint = "Waypoint"
     Water = "Water"
     Begin = "Begin"
+    Building = "Building"
+    Hill = "Hill"
+    Home = "Home"
+    Emergency = "Emergency"
+    Info = "Info"
+    Lake = "Lake"
+    Meadow = "Meadow"
+    Peak = "Peak"
+    Camp = "Camp"
+    Camping = "Camping"
+    Restaurant = "Restaurant"
     End = "End"
+    Car = "Car" 
+    Cafe = "Cafe"
+    Cave = "Cave"
+    Cliff = "Cliff"
+    Coast = "Coast" 
+    Crossroads = "Crossroads"
+    Food = "Food"
+    Forest = "Forest"
+    Geocache = "Geocache"
+    Hostel = "Hostel"
+    Hotel = "Hotel"
+    Lodging = "Lodging"
+    Mountain = "Mountain"
+    Parking = "Parking"
+    River = "River"
+    Road = "Road"
+    Rock = "Rock"
+    Sight = "Sight"
+    Trail = "Trail"
+    Valley = "Valley"
+    Waterfall = "Waterfall"
 
+    
+
+ 
     def from_string(waypoint_type: str):
         try:
             return WaypointType(waypoint_type)
