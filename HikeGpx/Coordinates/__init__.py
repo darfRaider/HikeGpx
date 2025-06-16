@@ -1,6 +1,10 @@
 from .WGS84 import WGS84
 from .LV95 import LV95
 
+"""
+https://backend.swisstopo.admin.ch/fileservice/sdweb-docs-prod-swisstopoch-files/files/2023/11/14/2bd5f57e-1109-40d6-8430-cbdfc9f42203.pdf
+"""
+
 def prettify_degree(deg: float) -> str:
     degrees = int(deg)
     minutes_decimal = (deg-degrees)*60
@@ -9,8 +13,8 @@ def prettify_degree(deg: float) -> str:
     return f"{degrees}° {minutes}' {seconds}\""
 
 def lv95_from_wgs84(coord: WGS84) -> LV95:
-    phi_dash = (coord.latitude - 169028.66) * 1e-4
-    lambda_dash = (coord.longitude - 26782.5) * 1e-4
+    phi_dash = (coord.latitude*3600 - 169028.66) * 1e-4
+    lambda_dash = (coord.longitude*3600 - 26782.5) * 1e-4
     E = 2600072.37 +\
         211455.93 * lambda_dash -\
         10938.51 * lambda_dash * phi_dash -\
