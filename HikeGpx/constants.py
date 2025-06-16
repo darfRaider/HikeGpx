@@ -1,0 +1,1 @@
+MEAN_EARTH_RADIUS = 6370e3 # meters

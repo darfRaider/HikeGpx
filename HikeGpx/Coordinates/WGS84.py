@@ -8,7 +8,6 @@ math.pi
 class WGS84:
     latitude: float
     longitude: float
-    altitude: float = None
 
     def to_dict(self, as_string: bool = False):
         if not as_string:

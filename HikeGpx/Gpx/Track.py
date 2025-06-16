@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from .TrackSegment import TrackSegment
 from .TrackPoint import TrackPoint
+from HikeGpx.Coordinates.WGS84 import WGS84
 import bs4
 
 
@@ -23,6 +24,6 @@ class Track:
 
     @staticmethod
     def from_wpt_list(name: str, waypoints: list[tuple], number: int = 1):
-        trackpoints = [TrackPoint(latitude=x[0], longitude=x[1], elevation=x[2]) for x in waypoints]
+        trackpoints = [TrackPoint(WGS84(latitude=x[0], longitude=x[1]), elevation=x[2]) for x in waypoints]
         track_segment = TrackSegment(trackpoints)
         return Track(name=name, number=number, track_segment=track_segment)
