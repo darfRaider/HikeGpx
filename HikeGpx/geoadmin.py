@@ -8,10 +8,11 @@ def get_height_from_coordinate(coord: Tuple[LV95, WGS84], override_error: bool =
     if isinstance(coord, WGS84):
         coord = lv95_from_wgs84(coord)
     # coord is of type LV95
-    URI = "https://api3.geo.admin.ch/rest/services/height"
-    QUERY = f"easting={coord.E}&northing={coord.N}"
+    BASE_URL = "https://api3.geo.admin.ch/rest/services/height"
+    QUERY = f"?easting={coord.E}&northing={coord.N}"
+    URI = BASE_URL + QUERY
     try:
-        resp = requests.get(URI + "?" + QUERY).json()
+        resp = requests.get(URI).json()
     except Exception as e:
         if not override_error:
             raise Exception(f"Unable to perform GET-Request for altitude retrieval ({repr(e)}).")

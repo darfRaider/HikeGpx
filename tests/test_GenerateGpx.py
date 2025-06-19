@@ -1,5 +1,5 @@
 import unittest
-import os
+from pathlib import Path
 from HikeGpx.Gpx.GpxFile import GpxFile
 from HikeGpx.Gpx.Track import Track
 from HikeGpx.Gpx.Waypoint import Waypoint
@@ -8,11 +8,14 @@ from HikeGpx.Coordinates.WGS84 import WGS84
 
 class TestGpxFile(unittest.TestCase):
 
-    TEST_FILENAME = "test.gpx"
+    OUT_DIR = Path("./tests/output")
+    TEST_FILENAME = OUT_DIR / "test.gpx"
+    TEST_FILENAME_SWISSTOPO = OUT_DIR / "000_test_swisstopo.gpx"
+    TEST_FILENAME_GEOADMIN = OUT_DIR / "000_test_geoadmin.gpx"
 
     def tearDown(self) -> None:
-        if os.path.exists(TestGpxFile.TEST_FILENAME):
-            os.remove(TestGpxFile.TEST_FILENAME)
+        # if os.path.exists(TestGpxFile.TEST_FILENAME):
+        #     os.remove(TestGpxFile.TEST_FILENAME)
         return super().tearDown()
 
     def test_example(self):
@@ -33,3 +36,7 @@ class TestGpxFile(unittest.TestCase):
             WaypointType.Water)
         f.add_waypoint(wpt)
         f.save(TestGpxFile.TEST_FILENAME)
+
+    def test_from_geoadmin(self):
+        f = GpxFile.from_geoadmin_file("./tests/assets/testtrack2.gpx", "Schauenburgerfluh")
+        f.save(TestGpxFile.TEST_FILENAME_GEOADMIN)

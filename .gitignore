@@ -2,3 +2,4 @@ HikeGpx.egg-info
 build
 **/__pycache__/**
 .vscode
+tests/output

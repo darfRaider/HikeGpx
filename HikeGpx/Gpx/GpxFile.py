@@ -5,23 +5,11 @@ from HikeGpx.Coordinates.WGS84 import WGS84
 from HikeGpx.geoadmin import get_height_from_coordinate
 from typing import Self
 from copy import deepcopy
+from HikeGpx.constants import GPX_ATTRIBUTES
 
 class GpxFile:
     def __init__(self, name):
-        self.root = bs4.BeautifulSoup()
         self.name = name
-        self.gpx_tag = self.root.new_tag("gpx", 
-            attrs={
-                "xmlns": "http://www.topografix.com/GPX/1/1",
-                "version": "1.1",
-                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-                "xsi:schemaLocation": "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" 
-
-            })
-        self.root.append(self.gpx_tag)
-        # self.name_tag = self.root.new_tag("name")
-        # self.gpx_tag.append(self.name_tag)
-        # self.set_name(name)
         self.tracks: list[Track] = []
         self.waypoints: list[Waypoint] = []
 
@@ -43,16 +31,19 @@ class GpxFile:
     def add_waypoint(self, waypoint: Waypoint):
         self.waypoints.append(waypoint)
 
-    def assemble(self):
+    def assemble(self, root: bs4.BeautifulSoup, gpx_tag: bs4.BeautifulSoup):
         for waypoint in self.waypoints:
-            self.gpx_tag.append(waypoint.get_soup(self.root))
+            gpx_tag.append(waypoint.get_soup(root))
         for track in self.tracks:
-            self.gpx_tag.append(track.get_soup(self.root))
+            gpx_tag.append(track.get_soup(root))
 
     def save(self, path):
-        root_cpy = deepcopy(self.root)
+        root = bs4.BeautifulSoup()
+        gpx_tag = root.new_tag("gpx", attrs=GPX_ATTRIBUTES)
+        root.append(gpx_tag)
+        self.assemble(root, gpx_tag)
         with open(path, "wb") as f:
-            f.write(self.root.encode())
+            f.write(root.encode())
     
     @staticmethod
     def from_swisstopo_file(path: str) -> Self:
