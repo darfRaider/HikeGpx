@@ -4,7 +4,7 @@ from HikeGpx.Coordinates import lv95_from_wgs84
 from HikeGpx.Coordinates.LV95 import LV95
 from HikeGpx.Coordinates.WGS84 import WGS84
 
-def get_height_from_coordinate(coord: Tuple[LV95, WGS84]) -> float:
+def get_height_from_coordinate(coord: Tuple[LV95, WGS84], override_error: bool = False) -> float:
     if isinstance(coord, WGS84):
         coord = lv95_from_wgs84(coord)
     # coord is of type LV95
@@ -13,9 +13,13 @@ def get_height_from_coordinate(coord: Tuple[LV95, WGS84]) -> float:
     try:
         resp = requests.get(URI + "?" + QUERY).json()
     except Exception as e:
-        raise Exception(f"Unable to perform GET-Request for altitude retrieval ({repr(e)}).")
+        if not override_error:
+            raise Exception(f"Unable to perform GET-Request for altitude retrieval ({repr(e)}).")
+        return 0.0
     try:
         height = float(resp["height"])
     except Exception as e:
-        raise Exception(f"Unable to obtain altitude from GET-Response ({URI + "?" + QUERY}): {resp} ({repr(e)}).")
+        if not override_error:
+            raise Exception(f"Unable to obtain altitude from GET-Response ({URI + '?' + QUERY}): {resp} ({repr(e)}).")
+        return 0.0
     return height

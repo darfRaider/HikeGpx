@@ -1,0 +1,12 @@
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="OpenLayers">
+ <wpt lat="47.55076" lon="7.599493">
+  <name>
+   TestWaypoint
+  </name>
+  <type>
+   Cafe
+  </type>
+ </wpt>
+<rte>
+<type>linepolygon</type>
+<rtept lat="47.55156876706141" lon="7.598342056838701"/><rtept lat="47.550757159482096" lon="7.599486777274631"/><rtept lat="47.54920076807766" lon="7.601739313724196"/><rtept lat="47.548597966415535" lon="7.602835235925486"/></rte></gpx>
