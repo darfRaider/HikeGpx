@@ -1,6 +1,8 @@
 import bs4
 from .Track import Track
 from .Waypoint import Waypoint
+from HikeGpx.Gpx.TrackPoint import TrackPoint
+from HikeGpx.Gpx.TrackSegment import TrackSegment
 from HikeGpx.Coordinates.WGS84 import WGS84
 from HikeGpx.geoadmin import get_height_from_coordinate
 from typing import Self
@@ -46,8 +48,38 @@ class GpxFile:
             f.write(root.encode())
     
     @staticmethod
-    def from_swisstopo_file(path: str) -> Self:
-        pass
+    def _get_trackpoint_from_swisstopo(trkpt: bs4):
+        wgs84_coord = WGS84(
+            float(trkpt.attrs['lat']),
+            float(trkpt.attrs['lon']))
+        ele = float(trkpt.find("ele").text)
+        return TrackPoint(wgs84_coord, ele)
+
+    @classmethod
+    def from_swisstopo_file(cls, path: str, name: str = None) -> Self:
+        with open(path, "rb") as f:
+            data = bs4.BeautifulSoup(f.read())
+        track = data.find_all("trk")
+        # TODO: check if this is == 1 per default (given by xsd)
+        if len(track) != 1:
+            raise Exception("Track the gpx-file")
+        trackseg = track[0].find_all("trkseg")
+        if len(trackseg) != 1:
+            raise Exception("There should only be one track segment"
+                            " in the gpx-file")
+        if name is None:
+            name = track[0].find("name")
+            if not name:
+                raise ValueError("No tag named 'name' found.")
+            name = name.text
+        trackpoints = trackseg[0].find_all("trkpt")
+        trackpoints_obj = [GpxFile._get_trackpoint_from_swisstopo(x) 
+                           for x in trackpoints]
+        track_segment = TrackSegment(trackpoints_obj)
+        track = Track(name=name, number=1, track_segment=track_segment)
+        gpx = GpxFile(name=name)
+        gpx.add_track(track)
+        return gpx
 
     @classmethod
     def from_geoadmin_file(cls, path: str, name: str) -> Self:
@@ -55,9 +87,12 @@ class GpxFile:
             data = bs4.BeautifulSoup(f.read())
         if not len(data.find_all("rte")) == 1:
             raise Exception("There seem to exist multiple routes in the file!")
-        waypoints = [WGS84(float(pt.attrs['lat']), float(pt.attrs['lon'])) for pt in data.find_all("rtept")]
-        elevation = [get_height_from_coordinate(wp, override_error=True) for wp in waypoints]
-        track = Track.from_wpt_list(name, [(wpt.latitude, wpt.longitude, el) for wpt, el in zip(waypoints, elevation)])
+        waypoints = [WGS84(float(pt.attrs['lat']), float(pt.attrs['lon'])) 
+                     for pt in data.find_all("rtept")]
+        elevation = [get_height_from_coordinate(wp, override_error=True) 
+                     for wp in waypoints]
+        track = Track.from_wpt_list(name, [(wpt.latitude, wpt.longitude, el) 
+                                           for wpt, el in zip(waypoints, elevation)])
         gpx_file = GpxFile(name)
         gpx_file.add_track(track)
         return gpx_file
