@@ -11,7 +11,7 @@ class TestGpxFile(unittest.TestCase):
     OUT_DIR = Path("./tests/output")
     TEST_FILENAME = OUT_DIR / "test.gpx"
     TEST_FILENAME_SWISSTOPO = OUT_DIR / "000_test_swisstopo.gpx"
-    TEST_FILENAME_GEOADMIN = OUT_DIR / "000_test_geoadmin.gpx"
+    TEST_FILENAME_GEOADMIN = OUT_DIR / "Adula.gpx"
 
     def tearDown(self) -> None:
         # if os.path.exists(TestGpxFile.TEST_FILENAME):
@@ -38,5 +38,10 @@ class TestGpxFile(unittest.TestCase):
         f.save(TestGpxFile.TEST_FILENAME)
 
     def test_from_geoadmin(self):
-        f = GpxFile.from_geoadmin_file("./tests/assets/testtrack2.gpx", "Schauenburgerfluh")
+        f = GpxFile.from_geoadmin_file("./tests/assets/Adula.gpx", "Adula CAS")
+        print(f.calculate_track_distance())
         f.save(TestGpxFile.TEST_FILENAME_GEOADMIN)
+
+    def test_from_swisstopo(self):
+        f = GpxFile.from_swisstopo_file("./tests/assets/Schnebelhorn Swisstopo.gpx")
+        f.save(TestGpxFile.TEST_FILENAME_SWISSTOPO)
