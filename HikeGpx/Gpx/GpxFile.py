@@ -15,6 +15,16 @@ class GpxFile:
         self.tracks: list[Track] = []
         self.waypoints: list[Waypoint] = []
 
+    def calculate_track_distance(self, track_id: int = 0) -> float:
+        if len(self.tracks) == 0:
+            raise IndexError(f"Track index not found "
+                             f"({len(self.tracks)} tracks availabe)")
+        distance = 0
+        track = self.tracks[track_id]
+        for i in range(len(track.track_segment.trackpoints) - 1):
+            distance += (track.track_segment.trackpoints[i+1]-track.track_segment.trackpoints[i])
+        return distance
+
     # def set_name(self, name: str):
     #     self.name_tag.append(name)
 
